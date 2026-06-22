@@ -33,7 +33,7 @@ export function FeedScreen() {
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
       <View style={styles.container}>
-        <FeedHeader requestCount={2} />
+        <FeedHeader />
         <FlatList
           data={posts}
           keyExtractor={(item) => item.id}

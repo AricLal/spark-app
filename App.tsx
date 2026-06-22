@@ -9,6 +9,8 @@ import { RootNavigator } from './src/navigation/RootNavigator';
 import { FeedProvider } from './src/context/FeedContext';
 import { SessionDetailProvider } from './src/context/SessionDetailContext';
 import { SessionDetailOverlay } from './src/components/SessionDetailOverlay';
+import { FriendsProvider } from './src/context/FriendsContext';
+import { FriendsModal } from './src/components/friends/FriendsModal';
 import { colors } from './src/theme/colors';
 
 // Keeps screen-transition backgrounds and the system nav theme aligned with
@@ -51,12 +53,15 @@ export default function App() {
     <SafeAreaProvider>
       <StatusBar style="light" />
       <FeedProvider>
-        <SessionDetailProvider>
-          <NavigationContainer theme={navTheme}>
-            <RootNavigator />
-          </NavigationContainer>
-          <SessionDetailOverlay />
-        </SessionDetailProvider>
+        <FriendsProvider>
+          <SessionDetailProvider>
+            <NavigationContainer theme={navTheme}>
+              <RootNavigator />
+            </NavigationContainer>
+            <SessionDetailOverlay />
+            <FriendsModal />
+          </SessionDetailProvider>
+        </FriendsProvider>
       </FeedProvider>
     </SafeAreaProvider>
   );

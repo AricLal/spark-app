@@ -1,28 +1,33 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { ScreenHeader } from './ScreenHeader';
+import { useFriends } from '../context/FriendsContext';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/typography';
 
 // Matches .iconbtn.addfr / .fr-badge in the prototype: the add-friends
 // button with its unread-request badge, slotted into the shared
-// ScreenHeader's right-hand side.
-export function FeedHeader({ requestCount = 2 }: { requestCount?: number }) {
+// ScreenHeader's right-hand side. Tapping it opens the Friends panel
+// (openAdd() in the prototype); the badge count is the real number of
+// pending incoming requests rather than a hardcoded prop.
+export function FeedHeader() {
+  const { openFriends, pendingCount } = useFriends();
+
   return (
     <ScreenHeader
       title="Spark"
       rightContent={
-        <View>
+        <Pressable onPress={openFriends}>
           <View style={styles.iconBtn}>
             <Feather name="users" size={18} color={colors.muted} />
           </View>
-          {requestCount > 0 && (
+          {pendingCount > 0 && (
             <View style={styles.badge}>
-              <Text style={styles.badgeText}>{requestCount}</Text>
+              <Text style={styles.badgeText}>{pendingCount}</Text>
             </View>
           )}
-        </View>
+        </Pressable>
       }
     />
   );
