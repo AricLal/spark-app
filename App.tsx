@@ -6,6 +6,7 @@ import { NavigationContainer, DarkTheme, type Theme } from '@react-navigation/na
 import { useFonts as useInterFonts, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
 import { useFonts as useBricolageFonts, BricolageGrotesque_700Bold, BricolageGrotesque_800ExtraBold } from '@expo-google-fonts/bricolage-grotesque';
 import { RootNavigator } from './src/navigation/RootNavigator';
+import { FeedProvider } from './src/context/FeedContext';
 import { colors } from './src/theme/colors';
 
 // Keeps screen-transition backgrounds and the system nav theme aligned with
@@ -47,9 +48,11 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <StatusBar style="light" />
-      <NavigationContainer theme={navTheme}>
-        <RootNavigator />
-      </NavigationContainer>
+      <FeedProvider>
+        <NavigationContainer theme={navTheme}>
+          <RootNavigator />
+        </NavigationContainer>
+      </FeedProvider>
     </SafeAreaProvider>
   );
 }

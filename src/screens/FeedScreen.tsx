@@ -3,7 +3,8 @@ import { FlatList, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FeedHeader } from '../components/FeedHeader';
 import { FeedCard } from '../components/FeedCard';
-import { feedData, type FeedPost } from '../data/feedData';
+import { useFeed } from '../context/FeedContext';
+import type { FeedPost } from '../data/feedData';
 import { colors } from '../theme/colors';
 
 // Matches <section id="feed"> in the prototype — the home screen: wordmark
@@ -11,6 +12,8 @@ import { colors } from '../theme/colors';
 // onOpenSession but the session-detail screen isn't built yet (out of
 // scope for this first pass).
 export function FeedScreen() {
+  const { posts } = useFeed();
+
   const handleOpenSession = (post: FeedPost) => {
     console.log('Open session detail for', post.user, '(not built yet)');
   };
@@ -20,7 +23,7 @@ export function FeedScreen() {
       <View style={styles.container}>
         <FeedHeader requestCount={2} />
         <FlatList
-          data={feedData}
+          data={posts}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <FeedCard post={item} onOpenSession={handleOpenSession} />
