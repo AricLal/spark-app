@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { View, ActivityIndicator } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -11,7 +11,11 @@ import { SessionDetailProvider } from './src/context/SessionDetailContext';
 import { SessionDetailOverlay } from './src/components/SessionDetailOverlay';
 import { FriendsProvider } from './src/context/FriendsContext';
 import { FriendsModal } from './src/components/friends/FriendsModal';
+import { AgeGate } from './src/components/AgeGate';
+import { getAgeConfirmed, setAgeConfirmed } from './src/lib/ageGateStorage';
 import { colors } from './src/theme/colors';
+
+type AgeGateStatus = 'checking' | 'needsGate' | 'denied' | 'passed';
 
 // Keeps screen-transition backgrounds and the system nav theme aligned with
 // the prototype's palette instead of React Navigation's default dark theme.
@@ -41,11 +45,48 @@ export default function App() {
 
   const fontsReady = interLoaded && bricolageLoaded;
 
-  if (!fontsReady) {
+  // Matches initGate(): check AsyncStorage for a prior "yes" before
+  // deciding whether to show the gate at all. The app tree below isn't
+  // mounted until this resolves, so there's no flash of Feed/Map/etc.
+  // underneath while the check is in flight — unlike the prototype's
+  // visibility:hidden "checking" state, which briefly reveals whatever's
+  // behind the gate since all screens are already mounted in that SPA.
+  const [ageGateStatus, setAgeGateStatus] = useState<AgeGateStatus>('checking');
+
+  useEffect(() => {
+    getAgeConfirmed().then((confirmed) => {
+      setAgeGateStatus(confirmed ? 'passed' : 'needsGate');
+    });
+  }, []);
+
+  const handleConfirm = () => {
+    setAgeGateStatus('passed');
+    setAgeConfirmed();
+  };
+
+  // Matches denyAge() — a dead end, no retry, same as the prototype.
+  const handleDeny = () => {
+    setAgeGateStatus('denied');
+  };
+
+  if (!fontsReady || ageGateStatus === 'checking') {
     return (
       <View style={{ flex: 1, backgroundColor: colors.bg, alignItems: 'center', justifyContent: 'center' }}>
         <ActivityIndicator color={colors.ember} />
       </View>
+    );
+  }
+
+  if (ageGateStatus !== 'passed') {
+    return (
+      <SafeAreaProvider>
+        <StatusBar style="light" />
+        <AgeGate
+          denied={ageGateStatus === 'denied'}
+          onConfirm={handleConfirm}
+          onDeny={handleDeny}
+        />
+      </SafeAreaProvider>
     );
   }
 
