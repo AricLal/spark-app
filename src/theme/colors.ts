@@ -12,6 +12,9 @@ export const colors = {
   text: '#f6ede2',
   muted: '#a8978a',
   dim: '#7a6a5d',
+  // Used only by the bottom nav's top border (.nav { border-top }) — a touch
+  // darker than `line`, distinct in the prototype's CSS.
+  navBorder: '#251d17',
 } as const;
 
 // Avatar gradient pairs, cycled by index — matches `avaColors` in the prototype.
