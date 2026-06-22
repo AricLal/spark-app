@@ -7,6 +7,8 @@ import { useFonts as useInterFonts, Inter_400Regular, Inter_500Medium, Inter_600
 import { useFonts as useBricolageFonts, BricolageGrotesque_700Bold, BricolageGrotesque_800ExtraBold } from '@expo-google-fonts/bricolage-grotesque';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { FeedProvider } from './src/context/FeedContext';
+import { SessionDetailProvider } from './src/context/SessionDetailContext';
+import { SessionDetailOverlay } from './src/components/SessionDetailOverlay';
 import { colors } from './src/theme/colors';
 
 // Keeps screen-transition backgrounds and the system nav theme aligned with
@@ -49,9 +51,12 @@ export default function App() {
     <SafeAreaProvider>
       <StatusBar style="light" />
       <FeedProvider>
-        <NavigationContainer theme={navTheme}>
-          <RootNavigator />
-        </NavigationContainer>
+        <SessionDetailProvider>
+          <NavigationContainer theme={navTheme}>
+            <RootNavigator />
+          </NavigationContainer>
+          <SessionDetailOverlay />
+        </SessionDetailProvider>
       </FeedProvider>
     </SafeAreaProvider>
   );

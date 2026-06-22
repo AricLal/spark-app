@@ -4,18 +4,30 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { FeedHeader } from '../components/FeedHeader';
 import { FeedCard } from '../components/FeedCard';
 import { useFeed } from '../context/FeedContext';
+import { useSessionDetail } from '../context/SessionDetailContext';
 import type { FeedPost } from '../data/feedData';
 import { colors } from '../theme/colors';
 
 // Matches <section id="feed"> in the prototype — the home screen: wordmark
-// header + a scrollable list of feed cards. Tapping a card is wired up via
-// onOpenSession but the session-detail screen isn't built yet (out of
-// scope for this first pass).
+// header + a scrollable list of feed cards. Tapping a card's photo opens
+// the session detail overlay (openSessionFromFeed in the prototype).
 export function FeedScreen() {
   const { posts } = useFeed();
+  const { openSession } = useSessionDetail();
 
   const handleOpenSession = (post: FeedPost) => {
-    console.log('Open session detail for', post.user, '(not built yet)');
+    openSession({
+      user: post.user,
+      avatarIndex: post.avatarIndex,
+      location: post.location,
+      scene: post.scene,
+      strain: post.strain,
+      mood: post.mood,
+      rating: post.rating,
+      likes: post.likes,
+      passes: post.passes,
+      caption: post.caption,
+    });
   };
 
   return (

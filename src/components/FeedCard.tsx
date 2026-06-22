@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
-import { BlurView } from 'expo-blur';
 import { Feather } from '@expo/vector-icons';
 import { SceneArt } from './SceneArt';
 import { Avatar } from './Avatar';
+import { PhotoBadges } from './PhotoBadges';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/typography';
 import type { FeedPost } from '../data/feedData';
@@ -29,8 +29,6 @@ export function FeedCard({ post, onOpenSession }: FeedCardProps) {
     });
   };
 
-  const hasTags = post.strain || post.mood;
-
   return (
     <View style={styles.card}>
       <View style={styles.cardHead}>
@@ -55,30 +53,7 @@ export function FeedCard({ post, onOpenSession }: FeedCardProps) {
         onPress={() => onOpenSession?.(post)}
       >
         <SceneArt scene={post.scene} gradientId={`feed-${post.id}`} />
-
-        {hasTags && (
-          <View style={styles.sceneTag}>
-            {post.strain && (
-              <View style={[styles.chip, styles.chipStrain]}>
-                <Text style={styles.chipStrainText}>🌿 {post.strain}</Text>
-              </View>
-            )}
-            {post.mood && (
-              <BlurView intensity={30} tint="dark" style={styles.chip}>
-                <Text style={styles.chipText}>{post.mood}</Text>
-              </BlurView>
-            )}
-          </View>
-        )}
-
-        {post.rating > 0 && (
-          <BlurView intensity={30} tint="dark" style={styles.stars}>
-            <Text style={styles.starsText}>
-              {'★'.repeat(post.rating)}
-              <Text style={styles.starsDim}>{'★'.repeat(5 - post.rating)}</Text>
-            </Text>
-          </BlurView>
-        )}
+        <PhotoBadges strain={post.strain} mood={post.mood} rating={post.rating} />
       </Pressable>
 
       <View style={styles.cardFoot}>
@@ -164,58 +139,6 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'relative',
     overflow: 'hidden',
-  },
-  sceneTag: {
-    position: 'absolute',
-    left: 12,
-    bottom: 12,
-    flexDirection: 'row',
-    gap: 7,
-    flexWrap: 'wrap',
-    maxWidth: '85%',
-  },
-  chip: {
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.12)',
-    paddingVertical: 6,
-    paddingHorizontal: 11,
-    borderRadius: 999,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  chipText: {
-    color: colors.text,
-    fontSize: 12,
-    fontFamily: fonts.bodySemiBold,
-  },
-  chipStrain: {
-    backgroundColor: 'rgba(255,122,54,0.22)',
-    borderColor: 'rgba(255,176,102,0.4)',
-  },
-  chipStrainText: {
-    color: colors.gold,
-    fontSize: 12,
-    fontFamily: fonts.bodySemiBold,
-  },
-  stars: {
-    position: 'absolute',
-    right: 12,
-    bottom: 12,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.12)',
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    borderRadius: 999,
-  },
-  starsText: {
-    fontSize: 12,
-    fontFamily: fonts.bodyBold,
-    color: colors.gold,
-  },
-  starsDim: {
-    color: colors.dim,
   },
   cardFoot: {
     flexDirection: 'row',
